@@ -72,5 +72,16 @@ public class GamePlayUtil {
         return characters;
     }
 
+    public static List<Character> extractUniqueChar(List<String> words) {
+        List<Character> characters = new ArrayList<>();
+        for (int i = 0; i < words.size(); i++) {
+            for (int j = 0; j < words.get(i).length(); j++) {
+                if (!characters.contains(words.get(i).charAt(j))) {
+                    characters.add(words.get(i).charAt(j));
+                }
+            }
+        }
+        return characters;
+    }
 
 }
