@@ -12,10 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder> {
-    private List<CharacterPlaceHolder> characterPlaceHolderList = new ArrayList<>();
+    private List<CharacterPlaceHolder> characterPlaceHolders = new ArrayList<>();
+    private OnRVItemClickListener<CharacterPlaceHolder> onRVItemClickListener;
+
+    public void setOnRVItemClickListener(OnRVItemClickListener<CharacterPlaceHolder> onRVItemClickListener) {
+        this.onRVItemClickListener = onRVItemClickListener;
+    }
+
+    public CharacterAdapter() {}
 
     public CharacterAdapter(List<CharacterPlaceHolder> characterPlaceHolders) {
-        this.characterPlaceHolderList = characterPlaceHolders;
+        this.characterPlaceHolders = characterPlaceHolders;
     }
 
     @NonNull
@@ -26,12 +33,28 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
 
     @Override
     public void onBindViewHolder(@NonNull CharacterViewHolder holder, int position) {
-        holder.bind(characterPlaceHolderList.get(position));
+        holder.bind(characterPlaceHolders.get(position));
+    }
+
+    public void add(CharacterPlaceHolder characterPlaceHolder) {
+        this.characterPlaceHolders.add(characterPlaceHolder);
+        notifyItemInserted(characterPlaceHolders.size() - 1);
+    }
+    public void clear() {
+        this.characterPlaceHolders.clear();
+        notifyDataSetChanged();
+    }
+    public String getWord() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < characterPlaceHolders.size(); i++) {
+            stringBuilder.append(characterPlaceHolders.get(i).getCharacter());
+        }
+        return stringBuilder.toString();
     }
 
     @Override
     public int getItemCount() {
-        return characterPlaceHolderList.size();
+        return characterPlaceHolders.size();
     }
 
     public class CharacterViewHolder extends RecyclerView.ViewHolder {
@@ -50,6 +73,32 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
             } else {
                 tvChar.setVisibility(View.INVISIBLE);
             }
+
+            if (characterPlaceHolder.isNull()) {
+                itemView.setBackground(null);
+            } else {
+                itemView.setBackgroundResource(R.drawable.background_rv_item);
+            }
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onRVItemClickListener != null) {
+                        onRVItemClickListener.onItemClick(characterPlaceHolder, getAdapterPosition());
+                    }
+                }
+            });
+        }
+    }
+
+    public void makeWordVisible(String word) {
+
+        for (int i = 0; i < characterPlaceHolders.size(); i++) {
+            if (characterPlaceHolders.get(i).getTag() != null && characterPlaceHolders.get(i).getTag().equals(word)) {
+                characterPlaceHolders.get(i).setVisible(true);
+                notifyItemChanged(i);
+            }
+            
         }
     }
 }

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:clipToPadding="false"
+    android:textDirection="rtl"
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:orientation="vertical"
     android:padding="4dp"
